@@ -1,0 +1,875 @@
+[
+  {
+    "toolSlug": "merge-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "split-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "compress-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "edit-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "jpg-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "crop-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "extract-pages",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "delete-pages",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "bookmark",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "table-of-contents",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "page-numbers",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "add-watermark",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "header-footer",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "invert-colors",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "background-color",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "text-color",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "add-stamps",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "remove-annotations",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "form-filler",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "form-creator",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "remove-blank-pages",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "image-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "png-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "json-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "psd-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "word-to-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "excel-to-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pptx-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "xps-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "rtf-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "epub-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "mobi-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "djvu-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "fb2-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "pdf-to-jpg",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-svg",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-json",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-docx",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-pptx",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-excel",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-markdown",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "ocr-pdf",
+    "creditCost": 10,
+    "minPlan": "pro",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "premium"
+  },
+  {
+    "toolSlug": "alternate-merge",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "add-attachments",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "extract-attachments",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "extract-images",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "edit-attachments",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "divide-pages",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "add-blank-page",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "reverse-pages",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "rotate-custom",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "overlay-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "add-page-labels",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "timestamp-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "n-up-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "grid-combine",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "combine-single-page",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "view-metadata",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "pdf-to-zip",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "compare-pdfs",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "posterize-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "fix-page-size",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "linearize-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "page-dimensions",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "remove-restrictions",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "repair-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "encrypt-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "sanitize-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "find-and-redact",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "decrypt-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "flatten-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "remove-metadata",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "change-permissions",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "digital-sign-pdf",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "validate-signature",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "deskew-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-booklet",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 50,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "rasterize-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "markdown-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "email-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "cbz-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "pdf-to-pdfa",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "font-to-outline",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "extract-tables",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "ocg-manager",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-reader",
+    "creditCost": 1,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "deep-sanitize",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "annotation-exporter",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-image",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "html-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "pdf-to-html",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "ofd-to-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-ofd",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "dxf-to-pdf",
+    "creditCost": 2,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "light"
+  },
+  {
+    "toolSlug": "pdf-to-dxf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "dwg-to-pdf",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 20,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  },
+  {
+    "toolSlug": "pdf-to-dwg",
+    "creditCost": 5,
+    "minPlan": "free",
+    "maxFilesPerTask": 10,
+    "ruleVersion": "v1",
+    "active": true,
+    "tier": "heavy"
+  }
+]

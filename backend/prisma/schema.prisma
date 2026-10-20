@@ -1,0 +1,616 @@
+// Prisma Schema for 合羽PDF付费后端
+// 数据库：PostgreSQL（用户、订单、积分账本的唯一事实来源）
+// 迁移策略：版本化 migration（prisma migrate），生产禁止 db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 用户相关 ====================
+
+model User {
+  id              String   @id @default(uuid())
+  email           String?  @unique
+  phone           String?  @unique
+  passwordHash    String
+  name            String?
+  avatar          String?
+
+  // 套餐信息
+  planId          String   @default("free")
+  planExpiresAt   DateTime?
+
+  // 状态
+  status          UserStatus @default(ACTIVE)
+  emailVerified   Boolean  @default(false)
+  phoneVerified   Boolean  @default(false)
+  passwordUpdatedAt DateTime?
+
+  // 设备信息（用于风控）
+  deviceFingerprint String?
+  lastLoginAt     DateTime?
+  lastLoginIp     String?
+
+  // 时间戳
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // 关联
+  creditAccount     CreditAccount?
+  transactions      CreditTransaction[]
+  orders            Order[]
+  sessions          Session[]
+  inviteCodes       InviteCode[]
+  inviteRelationsAsInviter InviteRelation[] @relation("InviterRelations")
+  inviteRelationsAsInvitee InviteRelation? @relation("InviteeRelations")
+  billingTransactions BillingTransaction[]
+
+  @@map("users")
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+// ==================== 会话（refresh 轮换与吊销） ====================
+
+model Session {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  deviceInfo      Json?
+  refreshTokenHash String  @unique
+  // 轮换时记录替换本会话的新令牌 hash，用于重放检测
+  replacedByHash  String?
+  expiresAt       DateTime
+  revokedAt       DateTime?
+  lastUsedAt      DateTime?
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+// ==================== 验证码（注册/找回） ====================
+
+model VerificationCode {
+  id          String   @id @default(uuid())
+  target      String // 邮箱或手机号
+  channel     VerificationChannel
+  type        VerificationType
+  codeHash    String
+  attempts    Int      @default(0)
+  consumedAt  DateTime?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([target, type, createdAt])
+  @@map("verification_codes")
+}
+
+enum VerificationChannel {
+  EMAIL
+  SMS
+}
+
+enum VerificationType {
+  REGISTER
+  FORGOT_PASSWORD
+}
+
+// ==================== 审计日志 ====================
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorType   AuditActorType @default(USER)
+  actorId     String?
+  action      String
+  targetType  String?
+  targetId    String?
+  reason      String?
+  metadata    Json?
+  requestId   String?
+  createdAt   DateTime @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
+
+enum AuditActorType {
+  USER
+  ADMIN
+  SYSTEM
+}
+
+// ==================== 运营后台（迁移 M5，设计见 plans/运营后台管理系统设计.md） ====================
+
+enum AdminRole {
+  SUPER_ADMIN
+  OPERATOR
+  SUPPORT
+  FINANCE
+  AUDITOR
+}
+
+enum AdminStatus {
+  ACTIVE
+  DISABLED
+}
+
+model AdminUser {
+  id            String      @id @default(uuid())
+  username      String      @unique
+  passwordHash  String
+  name          String
+  role          AdminRole
+  status        AdminStatus @default(ACTIVE)
+  totpSecret    String?     // AES-256-GCM 加密（密钥由 JWT_SECRET 派生）
+  totpEnabled   Boolean     @default(false)
+  recoveryCodes String[]    // hash 列表，用后即焚
+  mustBindTotp  Boolean     @default(true) // 首次登录强制绑定
+  lastLoginAt   DateTime?
+  lastLoginIp   String?
+  createdBy     String? // 创建者 admin id（bootstrap 为 null）
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  sessions      AdminSession[]
+
+  @@index([role, status])
+  @@map("admin_users")
+}
+
+model AdminSession {
+  id               String    @id @default(uuid())
+  adminUserId      String
+  admin            AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  refreshHash      String    @unique // 与 Session 表同构：轮换 + 重放检测
+  replacedByHash   String?
+  revokedAt        DateTime?
+  ip               String?
+  userAgent        String?
+  createdAt        DateTime  @default(now())
+  lastUsedAt       DateTime  @default(now())
+  expiresAt        DateTime
+
+  @@index([adminUserId, revokedAt])
+  @@map("admin_sessions")
+}
+
+enum ApprovalType {
+  CREDIT_ADJUST
+  REFUND
+  ORDER_CLOSE
+  PLAN_CHANGE
+  RULE_CHANGE
+  INVITE_REWARD
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXECUTED
+  FAILED
+  CANCELLED
+}
+
+model ApprovalRequest {
+  id          String         @id @default(uuid())
+  type        ApprovalType
+  status      ApprovalStatus @default(PENDING)
+  payload     Json
+  reason      String
+  ticketNo    String?
+  applicantId String
+  approverId  String?
+  approvedAt  DateTime?
+  executedAt  DateTime?
+  result      Json?
+  createdAt   DateTime       @default(now())
+
+  @@index([status, createdAt])
+  @@index([type, createdAt])
+  @@index([applicantId, createdAt])
+  @@map("approval_requests")
+}
+
+model FeatureFlag {
+  key         String   @id
+  value       Json
+  description String?
+  updatedBy   String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@map("feature_flags")
+}
+
+enum ReconAction {
+  AUTO_SETTLED
+  MANUAL_DONE
+  ESCALATED
+  IGNORED
+}
+
+model ReconciliationRecord {
+  id            String        @id @default(uuid())
+  channel       PaymentChannel
+  orderNo       String
+  localStatus   OrderStatus
+  channelStatus String
+  diffType      String
+  action        ReconAction?
+  handledBy     String?
+  handledAt     DateTime?
+  note          String?
+  createdAt     DateTime      @default(now())
+
+  @@unique([channel, orderNo, diffType, createdAt])
+  @@index([action, createdAt])
+  @@map("reconciliation_records")
+}
+
+model DashboardSnapshot {
+  id         String   @id @default(uuid())
+  metricDate DateTime @db.Date
+  scope      String // 'today' | 'd7' | 'd30'
+  metrics    Json
+  createdAt  DateTime @default(now())
+
+  @@unique([metricDate, scope])
+  @@map("dashboard_snapshots")
+}
+
+model AlertEvent {
+  id         String    @id @default(uuid())
+  source     String // 'backend' | 'admin' | 'monitor'
+  severity   String // 'P0' | 'P1' | 'P2'
+  title      String
+  detail     Json?
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  // ---- T6.5 规则评估扩展 ----
+  /// 规则键（alert.service 的 ALERT_RULES key）；手工告警可为空
+  ruleKey    String?
+  /// 指标名 / 触发值 / 阈值，落库便于事后复盘
+  metric     String?
+  value      Float?
+  threshold  Float?
+  /// 连续命中轮数（达 ALERT_CONSECUTIVE_THRESHOLD 才外发）
+  hitStreak  Int       @default(1)
+  /// 外发状态：pending | sent | failed | suppressed | manual
+  status     String    @default("manual")
+  attempts   Int       @default(0)
+  lastError  String?
+  sentAt     DateTime?
+  updatedAt  DateTime  @updatedAt
+
+  @@index([severity, resolvedAt, createdAt])
+  @@index([ruleKey, createdAt])
+  @@index([status, createdAt])
+  @@map("alert_events")
+}
+
+/// 规则命中状态（每规则一行，支撑"连续命中计数"与静默窗口）
+model AlertRuleState {
+  ruleKey        String    @id
+  firing         Boolean   @default(false)
+  hitStreak      Int       @default(0)
+  lastEventId    String?
+  lastFiredAt    DateTime?
+  lastResolvedAt DateTime?
+  updatedAt      DateTime  @updatedAt
+
+  @@map("alert_rule_states")
+}
+
+// ==================== 积分账户（余额投影） ====================
+
+model CreditAccount {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 积分余额
+  balance         Int      @default(0)      // 订阅可用积分（周期重置）
+  bonusBalance    Int      @default(0)      // 奖励积分（可累积）
+  monthlyQuota    Int      @default(100)    // 本周期额度
+
+  // 计费周期
+  periodStart     DateTime?
+  periodEnd       DateTime?
+
+  // 乐观锁
+  version         Int      @default(0)
+
+  // 时间戳
+  updatedAt       DateTime @updatedAt
+
+  @@map("credit_accounts")
+}
+
+// ==================== 积分流水（不可变账本） ====================
+
+model CreditTransaction {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 交易类型
+  type            TransactionType
+  // 账本条目状态：仅"预扣冻结"类条目有 PENDING，其余直接 SETTLED
+  status          LedgerEntryStatus @default(SETTLED)
+
+  // 净变动（负数为扣减）
+  amount          Int
+  // 分账快照：保证任意时刻可由流水重算复核
+  deltaBalance    Int      @default(0)
+  deltaBonus      Int      @default(0)
+  balanceAfterBalance Int  @default(0)
+  balanceAfterBonus   Int  @default(0)
+  balanceAfter    Int      @default(0)
+
+  // 关联信息
+  toolSlug        String?
+  fileCount       Int?
+  referenceId     String?  @unique // 幂等引用
+  billingTxnId    String?          // 关联计费交易
+  linkedTxnId     String?          // 回滚流水指向原预扣流水
+
+  // 描述
+  description     String?
+
+  // 时间戳
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([billingTxnId])
+  @@map("credit_transactions")
+}
+
+enum LedgerEntryStatus {
+  PENDING
+  SETTLED
+  ROLLED_BACK
+}
+
+enum TransactionType {
+  CONSUME       // 消费
+  GRANT         // 发放
+  RESET         // 重置
+  REFUND        // 退款/回滚冲正
+  ADJUST        // 人工调整（追加式）
+  INVITE_GRANT  // 邀请奖励
+  BONUS         // 奖励
+}
+
+// ==================== 计费交易状态机 ====================
+
+model BillingTransaction {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  toolSlug        String
+  fileCount       Int      @default(1)
+  ruleVersion     String   @default("v1")
+
+  // 冻结金额及分账快照
+  frozenAmount    Int
+  splitFromBalance Int     @default(0)
+  splitFromBonus   Int     @default(0)
+  balanceAfterBalance Int  @default(0)
+  balanceAfterBonus   Int  @default(0)
+
+  status          BillingTxnStatus @default(PENDING)
+  idempotencyKey  String   @unique
+
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime
+  settledAt       DateTime?
+  rolledBackAt    DateTime?
+  rollbackReason  String?
+
+  // 关联预扣流水（1:1）
+  ledgerTxnId     String?  @unique
+
+  @@index([userId, createdAt])
+  @@index([status, expiresAt])
+  @@map("billing_transactions")
+}
+
+enum BillingTxnStatus {
+  PENDING
+  SETTLED
+  ROLLED_BACK
+  EXPIRED
+}
+
+// ==================== 工具计费规则（版本化） ====================
+
+model ToolBillingRule {
+  toolSlug        String   @id
+  creditCost      Int
+  minPlan         String   @default("free")
+  maxFilesPerTask Int      @default(5)
+  ruleVersion     String   @default("v1")
+  active          Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("tool_billing_rules")
+}
+
+// ==================== 订单 ====================
+
+model Order {
+  id              String   @id @default(uuid())
+  orderNo         String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+
+  // 套餐与价格快照（服务端定价，忽略客户端金额）
+  planId          String
+  amountCents     Int
+  currency        String   @default("CNY")
+  periodMonths    Int
+  priceSnapshot   Json?
+
+  // 幂等与失败信息
+  idempotencyKey  String?  @unique
+  failureReason   String?
+
+  // 权益发放关联
+  creditsGranted  Int      @default(0)
+  grantTxnId      String?
+
+  // 支付信息
+  channel         PaymentChannel
+  status          OrderStatus @default(PENDING)
+  thirdPartyTradeNo String?
+
+  // 时间
+  paidAt          DateTime?
+  expiresAt       DateTime?
+  closedAt        DateTime?
+  refundedAt      DateTime?
+  refundId        String?
+
+  // 时间戳
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // 关联
+  paymentEvents   PaymentEvent[]
+
+  @@index([userId, createdAt])
+  @@map("orders")
+}
+
+enum PaymentChannel {
+  WECHAT
+  ALIPAY
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDING
+  REFUNDED
+  CLOSED
+}
+
+// ==================== 支付事件（回调原文与验签记录） ====================
+
+model PaymentEvent {
+  id              String   @id @default(uuid())
+  orderNo         String
+
+  // 渠道与事件唯一标识（重放防护）
+  provider        String   @default("")
+  eventId         String   @default("")
+
+  eventType       String
+  rawPayload      Json
+  signatureValid  Boolean  @default(false)
+  processed       Boolean  @default(false)
+  processError    String?
+
+  order           Order    @relation(fields: [orderNo], references: [orderNo], onDelete: Cascade)
+
+  createdAt       DateTime @default(now())
+
+  @@unique([provider, eventId])
+  @@map("payment_events")
+}
+
+// ==================== 套餐配置 ====================
+
+model Plan {
+  id              String   @id
+  name            String
+  monthlyCredits  Int
+  priceCents      Int
+  periodMonths    Int      @default(1)
+  features        Json?
+  active          Boolean  @default(true)
+
+  maxFiles        Int      @default(5)
+  costTierAccess  String[] // ['free', 'light', 'heavy', 'premium']
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("plans")
+}
+
+// ==================== 邀请系统（首发仅归因/人工活动码，不自动发奖） ====================
+
+model InviteCode {
+  code            String   @id
+  ownerUserId     String
+  owner           User     @relation(fields: [ownerUserId], references: [id])
+
+  channel         String? // 渠道标记
+  maxUses         Int?
+  usedCount       Int      @default(0)
+
+  // 奖励快照（首发不自动发放，仅记录规则）
+  rewardCredits   Int      @default(200)  // 被邀请人奖励
+  inviterCredits  Int      @default(500)  // 邀请人奖励
+
+  expiresAt       DateTime?
+  active          Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+
+  // 关联
+  relations       InviteRelation[]
+
+  @@index([ownerUserId])
+  @@map("invite_codes")
+}
+
+model InviteRelation {
+  id              String   @id @default(uuid())
+  inviteeUserId   String   @unique  // 唯一约束：只能被邀请一次
+  inviterUserId   String
+
+  inviteCode      String
+  code            InviteCode @relation(fields: [inviteCode], references: [code])
+
+  status          InviteStatus @default(REGISTERED)
+  inviterRewarded Boolean  @default(false)
+  inviteeRewarded Boolean  @default(false)
+
+  // 风控
+  riskFlag        String?
+
+  invitee         User     @relation("InviteeRelations", fields: [inviteeUserId], references: [id])
+  inviter         User     @relation("InviterRelations", fields: [inviterUserId], references: [id])
+
+  createdAt       DateTime @default(now())
+
+  @@index([inviterUserId])
+  @@map("invite_relations")
+}
+
+enum InviteStatus {
+  REGISTERED
+  REWARDED
+  INVALID
+}

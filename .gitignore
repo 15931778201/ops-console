@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.local
+*.tsbuildinfo
+# 前端 .env 只含 Mock 开关，无密钥，需要入库
+!frontend/.env
+# 重构前的旧前端，仅本地对照
+frontend-legacy/

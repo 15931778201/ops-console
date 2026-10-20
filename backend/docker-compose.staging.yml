@@ -1,0 +1,62 @@
+# 预生产部署：后端 + PostgreSQL + Redis
+# 使用：docker compose -f docker-compose.staging.yml up -d
+# 密钥一律通过环境变量或 Secret Manager 注入，禁止写入本文件。
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-heyu}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?必须在环境中设置 POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-heyu_pdf}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-heyu}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-heyu}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-heyu_pdf}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:?必须在环境中设置 JWT_SECRET（至少 32 字符）}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-15m}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-30d}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:?必须设置前端域名白名单}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-mock}
+      PAYMENT_NOTIFY_BASE_URL: ${PAYMENT_NOTIFY_BASE_URL:-https://api.example.com}
+      VERIFICATION_CHANNEL: ${VERIFICATION_CHANNEL:-console}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      ADMIN_USER_IDS: ${ADMIN_USER_IDS:-}
+    ports:
+      - "127.0.0.1:3001:3001"
+
+volumes:
+  pgdata:
+  redisdata:
