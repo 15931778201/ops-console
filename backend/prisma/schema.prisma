@@ -105,6 +105,7 @@ enum VerificationChannel {
 enum VerificationType {
   REGISTER
   FORGOT_PASSWORD
+  LOGIN
 }
 
 // ==================== 审计日志 ====================
@@ -552,9 +553,13 @@ model Plan {
   maxFiles        Int      @default(5)
   costTierAccess  String[] // ['free', 'light', 'heavy', 'premium']
 
+  // UserSDK：产品归属（common = 通用目录；具体产品如 ffconvert 只出现在该产品的客户端）
+  product         String   @default("common")
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  @@index([product, active])
   @@map("plans")
 }
 

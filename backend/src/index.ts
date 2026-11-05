@@ -21,6 +21,7 @@ import billingRoutes from './routes/billing';
 import paymentRoutes from './routes/payment';
 import paymentNotifyRoutes from './routes/payment-notify';
 import inviteRoutes from './routes/invite';
+import usersdkRoutes from './routes/usersdk';
 import adminRoutes from './routes/admin';
 import adminV1Routes from './routes/admin-v1';
 import healthRoutes from './routes/health';
@@ -99,6 +100,7 @@ function createApp(): Express {
   instance.use('/api/billing', billingRoutes);
   instance.use('/api/payment', paymentRoutes);
   instance.use('/api/invite', inviteRoutes);
+  instance.use('/api/usersdk', usersdkRoutes); // 桌面 SDK（usersdk-core）登录/用户/套餐/支付
   // 注意顺序：/api/admin/v1 必须先于 /api/admin 挂载——
   // express.use 的前缀匹配会令 /api/admin 吞掉 /api/admin/v1/* 请求
   instance.use('/api/admin/v1', adminV1Routes); // 运营后台新体系（RBAC/MFA/审批）

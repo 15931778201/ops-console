@@ -24,6 +24,12 @@ export interface CreateOrderInput {
   channel: PaymentChannel;
   idempotencyKey: string;
   clientType: 'desktop' | 'web';
+  /**
+   * 服务端内部模块可覆盖成交总额（分）。仅 usersdk 等服务端调用方使用——
+   * 套餐卡为固定总价时，价格不再按 monthlyPrice × periodMonths 乘算；
+   * 客户端公开路由无此入参，金额仍以服务端 Plan/快照为唯一事实来源。
+   */
+  amountOverrideCents?: number;
 }
 
 export const orderService = {
@@ -32,8 +38,9 @@ export const orderService = {
     order: Order;
     paymentParams: Record<string, unknown>;
   }> {
-    if (![1, 3, 12].includes(input.periodMonths)) {
-      throw new ValidationError('售卖周期仅支持 1/3/12 个月');
+    // 服务端内部调用（usersdk 终身卡等）允许 1~1200 个月；公开路由的 zod 仍限 1/3/12
+    if (!Number.isInteger(input.periodMonths) || input.periodMonths < 1 || input.periodMonths > 1200) {
+      throw new ValidationError('售卖周期不合法（1~1200 个月）');
     }
 
     // 幂等：相同 key 返回既有订单（不重复创建支付单）
@@ -73,7 +80,7 @@ export const orderService = {
       throw new ValidationError('免费套餐无需购买');
     }
 
-    const amountCents = plan.priceCents * input.periodMonths;
+    const amountCents = input.amountOverrideCents ?? plan.priceCents * input.periodMonths;
     const priceSnapshot = {
       planId: plan.id,
       name: plan.name,
@@ -82,6 +89,7 @@ export const orderService = {
       monthlyCredits: plan.monthlyCredits,
       maxFiles: plan.maxFiles,
       costTierAccess: plan.costTierAccess,
+      ...(input.amountOverrideCents != null ? { amountOverrideCents: input.amountOverrideCents } : {}),
     };
 
     const orderNo = `ORD${Date.now()}${nanoid(6).toUpperCase()}`;

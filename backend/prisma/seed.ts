@@ -43,6 +43,49 @@ const PLANS = [
     maxFiles: 200,
     costTierAccess: ['free', 'light', 'heavy', 'premium'],
     features: { description: '适合团队/重度用户', support: 'dedicated' },
+    product: 'common',
+  },
+  // ==================== UserSDK 套餐（formatfactory 格式转化工厂） ====================
+  // 价格为整卡总价（createOrder 用 amountOverrideCents 固化），periodMonths 决定权益时长
+  {
+    id: 'ff_m1',
+    name: '月卡',
+    monthlyCredits: 2000,
+    priceCents: 2800,
+    periodMonths: 1,
+    maxFiles: 50,
+    costTierAccess: ['free', 'light', 'heavy'],
+    product: 'ffconvert',
+    features: { durationLabel: '每天 0.93 元', originPriceCents: 4900, footerLabel: '1台', gift: '新用户特惠' },
+  },
+  {
+    id: 'ff_y1',
+    name: '年卡',
+    monthlyCredits: 2000,
+    priceCents: 12800,
+    periodMonths: 12,
+    maxFiles: 50,
+    costTierAccess: ['free', 'light', 'heavy'],
+    product: 'ffconvert',
+    features: { durationLabel: '每天 0.35 元', originPriceCents: 19800, footerLabel: '2台', gift: '限时特惠', recommended: true },
+  },
+  {
+    id: 'ff_life',
+    name: '终身可用',
+    monthlyCredits: 50000,
+    priceCents: 32800,
+    periodMonths: 1200,
+    maxFiles: 200,
+    costTierAccess: ['free', 'light', 'heavy', 'premium'],
+    product: 'ffconvert',
+    features: {
+      durationLabel: '永不过期',
+      originPriceCents: 59800,
+      footerLabel: '5台共用',
+      gift: '新用户特惠',
+      ribbon: '限时特惠',
+      recommended: true,
+    },
   },
 ] as const;
 
@@ -94,6 +137,7 @@ async function main(): Promise<void> {
         maxFiles: plan.maxFiles,
         costTierAccess: [...plan.costTierAccess],
         features: plan.features,
+        product: 'product' in plan ? plan.product : 'common',
       },
     });
     // eslint-disable-next-line no-console
