@@ -83,7 +83,10 @@ export const usersdkService = {
   }): Promise<{ user: UsersdkUserInfo; token: string; refresh_token: string; expires_in: number }> {
     const { phone, captcha } = input;
     if (!CN_MOBILE.test(phone)) throw new ValidationError('请输入正确的手机号');
-    await verificationService.verify(phone, captcha, 'LOGIN');
+    // 测试直通：非生产环境允许固定验证码 1234 直接登录（客户端联调用，生产自动失效）
+    if (!(captcha === '1234' && !isProduction())) {
+      await verificationService.verify(phone, captcha, 'LOGIN');
+    }
 
     let user = await prisma.user.findUnique({ where: { phone } });
     let isNew = false;
@@ -162,11 +165,11 @@ export const usersdkService = {
   async productConfig(product: string): Promise<Record<string, unknown>> {
     const plans = await prisma.plan.findMany({
       where: { product, active: true },
-      orderBy: { priceCents: 'asc' },
+      orderBy: { priceCents: 'desc' },
     });
     if (plans.length === 0) {
       // 回退到通用目录，避免客户端拿到空套餐
-      const common = await prisma.plan.findMany({ where: { product: 'common', active: true }, orderBy: { priceCents: 'asc' } });
+      const common = await prisma.plan.findMany({ where: { product: 'common', active: true }, orderBy: { priceCents: 'desc' } });
       plans.push(...common);
     }
 
@@ -217,11 +220,11 @@ export const usersdkService = {
       plan_groups: [{ key: 'vip', title: '会员套餐', plans: list }],
       plan_notes: ['开通即代表同意退款规则：未解决问题全额退款！'],
       promo: {
-        title: '限时特惠 · 永久会员立减',
         badge: '超值优惠',
-        save_label: '已省80元',
-        save_fen: 8000,
-        end_time: Date.now() + 6 * 3600 * 1000,
+        title: '限时特惠 · 永久会员立减',
+        saveLabel: '已省80元',
+        saveFen: 8000,
+        endTime: Date.now() + 2 * 3600 * 1000,
       },
       guarantees: [
         { icon: 'shield', text: '支持七天无理由退款' },
